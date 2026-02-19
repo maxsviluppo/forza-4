@@ -1,0 +1,5 @@
+{
+  "name": "Forza 4 3D Neon",
+  "description": "Un gioco Forza 4 (Connect Four) in 3D con grafica al neon, modalità Uomo vs AI e controlli interattivi.",
+  "requestFramePermissions": []
+}
