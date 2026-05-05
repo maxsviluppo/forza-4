@@ -30,6 +30,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   winner = signal<number | null>(null);
   isDraw = signal<boolean>(false);
   isThinking = signal<boolean>(false);
+  showStats = signal<boolean>(false);
+  isMobile = signal<boolean>(window.innerWidth < 768);
   
   stats = signal({
     pvpRed: 0,
@@ -179,6 +181,30 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.saveStats();
   }
 
+  zoomIn() {
+    if (this.controls) {
+      const currentDist = this.camera.position.distanceTo(this.controls.target);
+      const newDist = Math.max(this.controls.minDistance, currentDist - 2);
+      const direction = new THREE.Vector3().subVectors(this.camera.position, this.controls.target).normalize();
+      this.camera.position.copy(this.controls.target).add(direction.multiplyScalar(newDist));
+      this.controls.update();
+    }
+  }
+
+  zoomOut() {
+    if (this.controls) {
+      const currentDist = this.camera.position.distanceTo(this.controls.target);
+      const newDist = Math.min(this.controls.maxDistance, currentDist + 2);
+      const direction = new THREE.Vector3().subVectors(this.camera.position, this.controls.target).normalize();
+      this.camera.position.copy(this.controls.target).add(direction.multiplyScalar(newDist));
+      this.controls.update();
+    }
+  }
+
+  toggleStats() {
+    this.showStats.update(v => !v);
+  }
+
   ngAfterViewInit() {
     // Timeout minimo per assicurarsi che il layout DOM sia stabilizzato
     setTimeout(() => {
@@ -207,7 +233,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     // Camera centrata sull'asse Y per inquadrare perfettamente la scacchiera
-    this.camera.position.set(0, 0, 18); 
+    const initialZ = width < height ? 25 : 18; 
+    this.camera.position.set(0, 0, initialZ); 
     this.camera.lookAt(0, 0, 0);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -247,6 +274,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.controls.dampingFactor = 0.05;
     this.controls.maxPolarAngle = Math.PI / 1.5;
     this.controls.target.set(0, 0, 0);
+    this.controls.enableZoom = true;
+    this.controls.minDistance = 5;
+    this.controls.maxDistance = 35;
+    this.controls.zoomSpeed = 1.2;
   }
 
   private createBoardVisuals() {
@@ -301,7 +332,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.isAnimatingDrop = false;
     this.cameraShake = 0;
     if (this.camera) {
-       this.camera.position.set(0, 0, 18);
+       const initialZ = window.innerWidth < window.innerHeight ? 25 : 18;
+       this.camera.position.set(0, 0, initialZ);
        this.camera.lookAt(0, 0, 0);
     }
     if (this.pieces && this.scene) this.pieces.forEach(p => this.scene.remove(p));
@@ -332,7 +364,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.cameraShake *= 0.9;
       if (this.cameraShake < 0.01) {
          this.cameraShake = 0;
-         this.camera.position.set(0, 0, 18); // Reset position
+         // Reset position relative to current zoom
+         const targetZ = window.innerWidth < window.innerHeight ? 25 : 18;
+         this.camera.position.set(0, 0, targetZ); 
          this.camera.lookAt(0, 0, 0);
       }
     }
@@ -373,7 +407,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const container = this.canvasRef.nativeElement;
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
+    
+    this.isMobile.set(width < 768);
+    
     this.camera.aspect = width / height;
+    
+    // Auto-zoom per mobile portrait
+    if (width < height) {
+      this.camera.position.z = 25;
+    } else {
+      this.camera.position.z = 18;
+    }
+    
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
     this.composer.setSize(width, height);

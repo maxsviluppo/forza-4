@@ -2,51 +2,67 @@
 <div #canvasContainer class="fixed inset-0 bg-[radial-gradient(circle_at_center,_#1a2233_0%,_#000000_100%)] overflow-hidden select-none font-['Orbitron']">
   
   <!-- UI Header Container -->
-  <div class="absolute top-0 left-0 w-full p-6 flex justify-between items-start pointer-events-none z-20">
+  <div class="absolute top-0 left-0 w-full p-3 md:p-6 flex justify-between items-start pointer-events-none z-20">
     
     <!-- Left Controls (Mode Switcher) -->
-    <div class="pointer-events-auto flex gap-4">
+    <div class="pointer-events-auto flex flex-col md:flex-row gap-2 md:gap-4">
       
       <!-- AI Mode Btn -->
       <button 
         (click)="setMode('PvAI')" 
-        class="group relative flex items-center justify-center w-12 h-12 rounded-full border border-blue-500/30 bg-black/40 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-blue-400 hover:shadow-[0_0_15px_rgba(0,136,255,0.5)]"
+        class="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-blue-500/30 bg-black/40 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-blue-400 hover:shadow-[0_0_15px_rgba(0,136,255,0.5)]"
         [class.bg-blue-600_20]="gameMode() === 'PvAI'"
         [class.shadow-[0_0_10px_rgba(0,136,255,0.3)]]="gameMode() === 'PvAI'">
-        <i class="fas fa-robot text-xl" 
+        <i class="fas fa-robot text-lg md:text-xl" 
            [class.text-blue-400]="gameMode() === 'PvAI'"
            [class.text-gray-500]="gameMode() !== 'PvAI'"></i>
-        <span class="absolute top-14 text-[10px] text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded">VS AI</span>
+        <span class="hidden md:block absolute top-14 text-[10px] text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded">VS AI</span>
       </button>
 
       <!-- PvP Mode Btn -->
       <button 
         (click)="setMode('PvP')" 
-        class="group relative flex items-center justify-center w-12 h-12 rounded-full border border-blue-500/30 bg-black/40 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+        class="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-blue-500/30 bg-black/40 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.5)]"
         [class.bg-purple-600_20]="gameMode() === 'PvP'"
         [class.shadow-[0_0_10px_rgba(168,85,247,0.3)]]="gameMode() === 'PvP'">
-        <i class="fas fa-user-friends text-xl"
+        <i class="fas fa-user-friends text-lg md:text-xl"
            [class.text-purple-400]="gameMode() === 'PvP'"
            [class.text-gray-500]="gameMode() !== 'PvP'"></i>
-        <span class="absolute top-14 text-[10px] text-purple-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded">2 PLAYERS</span>
+        <span class="hidden md:block absolute top-14 text-[10px] text-purple-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded">2 PLAYERS</span>
       </button>
 
       <!-- Separator -->
-      <div class="w-px h-12 bg-white/10 mx-1"></div>
+      <div class="hidden md:block w-px h-12 bg-white/10 mx-1"></div>
 
       <!-- Reset Btn -->
       <button 
         (click)="resetGame()" 
-        class="group relative flex items-center justify-center w-12 h-12 rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all duration-300 hover:rotate-180 hover:bg-white/10 hover:border-white/50">
-        <i class="fas fa-redo-alt text-white/70 text-lg group-hover:text-white"></i>
-        <span class="absolute top-14 text-[10px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded group-hover:rotate-180">RESET</span>
+        class="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all duration-300 hover:rotate-180 hover:bg-white/10 hover:border-white/50">
+        <i class="fas fa-redo-alt text-white/70 text-base md:text-lg group-hover:text-white"></i>
+        <span class="hidden md:block absolute top-14 text-[10px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded group-hover:rotate-180">RESET</span>
+      </button>
+
+      <!-- Zoom In Btn -->
+      <button 
+        (click)="zoomIn()" 
+        class="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/10">
+        <i class="fas fa-search-plus text-white/70 text-base md:text-lg group-hover:text-white"></i>
+        <span class="hidden md:block absolute top-14 text-[10px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded">ZOOM +</span>
+      </button>
+
+      <!-- Zoom Out Btn -->
+      <button 
+        (click)="zoomOut()" 
+        class="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/10">
+        <i class="fas fa-search-minus text-white/70 text-base md:text-lg group-hover:text-white"></i>
+        <span class="hidden md:block absolute top-14 text-[10px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded">ZOOM -</span>
       </button>
     </div>
 
     <!-- Center Title & Status -->
-    <div class="absolute left-1/2 transform -translate-x-1/2 top-4 text-center pointer-events-none">
-      <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-cyan-300 via-blue-500 to-purple-600 drop-shadow-[0_0_20px_rgba(0,100,255,0.6)] tracking-widest uppercase" style="text-shadow: 0 0 30px rgba(0,200,255,0.2);">
-        FORZA 4 <span class="text-white/80 font-light text-2xl md:text-3xl align-top">NEON</span>
+    <div class="absolute left-1/2 transform -translate-x-1/2 top-4 text-center pointer-events-none w-full md:w-auto">
+      <h1 class="text-2xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-cyan-300 via-blue-500 to-purple-600 drop-shadow-[0_0_20px_rgba(0,100,255,0.6)] tracking-widest uppercase" style="text-shadow: 0 0 30px rgba(0,200,255,0.2);">
+        FORZA 4 <span class="hidden sm:inline text-white/80 font-light text-xl md:text-3xl align-top">NEON</span>
       </h1>
       
       <!-- Status Pill -->
@@ -65,35 +81,44 @@
 
     <!-- Right Controls (Stats) -->
     <div class="pointer-events-auto flex flex-col gap-2 items-end">
-      <div class="bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4 shadow-lg w-48 transition-all hover:border-white/20">
+      <!-- Toggle Stats Btn (Mobile Only) -->
+      <button 
+        (click)="toggleStats()"
+        class="md:hidden flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-black/40 backdrop-blur-md transition-all hover:bg-white/10">
+        <i class="fas fa-chart-bar text-white/70"></i>
+      </button>
+
+      <div 
+        [class.hidden]="!showStats() && isMobile()"
+        class="bg-black/60 md:bg-black/40 backdrop-blur-xl md:backdrop-blur-md border border-white/10 rounded-xl p-3 md:p-4 shadow-lg w-40 md:w-48 transition-all hover:border-white/20">
         <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-2">
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Statistiche</span>
-          <button (click)="resetStats()" class="text-[10px] text-red-400 hover:text-red-300 transition-colors uppercase">Reset</button>
+          <span class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Stats</span>
+          <button (click)="resetStats()" class="text-[9px] md:text-[10px] text-red-400 hover:text-red-300 transition-colors uppercase">Reset</button>
         </div>
         
         @if (gameMode() === 'PvAI') {
           <div class="flex justify-between items-center mb-1">
-            <span class="text-sm text-cyan-300 flex items-center gap-2"><i class="fas fa-user text-xs"></i> Tu</span>
-            <span class="font-mono font-bold text-white">{{ stats().pvaiHuman }}</span>
+            <span class="text-xs md:text-sm text-cyan-300 flex items-center gap-2"><i class="fas fa-user text-[10px]"></i> Tu</span>
+            <span class="font-mono font-bold text-white text-xs md:text-sm">{{ stats().pvaiHuman }}</span>
           </div>
           <div class="flex justify-between items-center mb-1">
-            <span class="text-sm text-yellow-500 flex items-center gap-2"><i class="fas fa-robot text-xs"></i> AI</span>
-            <span class="font-mono font-bold text-white">{{ stats().pvaiAi }}</span>
+            <span class="text-xs md:text-sm text-yellow-500 flex items-center gap-2"><i class="fas fa-robot text-[10px]"></i> AI</span>
+            <span class="font-mono font-bold text-white text-xs md:text-sm">{{ stats().pvaiAi }}</span>
           </div>
         } @else {
           <div class="flex justify-between items-center mb-1">
-            <span class="text-sm text-[#ff0044] flex items-center gap-2"><i class="fas fa-circle text-[10px]"></i> Rosso</span>
-            <span class="font-mono font-bold text-white">{{ stats().pvpRed }}</span>
+            <span class="text-xs md:text-sm text-[#ff0044] flex items-center gap-2"><i class="fas fa-circle text-[10px]"></i> Rosso</span>
+            <span class="font-mono font-bold text-white text-xs md:text-sm">{{ stats().pvpRed }}</span>
           </div>
           <div class="flex justify-between items-center mb-1">
-            <span class="text-sm text-[#ffcc00] flex items-center gap-2"><i class="fas fa-circle text-[10px]"></i> Giallo</span>
-            <span class="font-mono font-bold text-white">{{ stats().pvpYellow }}</span>
+            <span class="text-xs md:text-sm text-[#ffcc00] flex items-center gap-2"><i class="fas fa-circle text-[10px]"></i> Giallo</span>
+            <span class="font-mono font-bold text-white text-xs md:text-sm">{{ stats().pvpYellow }}</span>
           </div>
         }
         
         <div class="flex justify-between items-center mt-2 pt-2 border-t border-white/5">
-          <span class="text-xs text-gray-500 uppercase">Pareggi</span>
-          <span class="font-mono font-bold text-gray-400">{{ stats().draws }}</span>
+          <span class="text-[10px] md:text-xs text-gray-500 uppercase">Pareggi</span>
+          <span class="font-mono font-bold text-gray-400 text-xs md:text-sm">{{ stats().draws }}</span>
         </div>
       </div>
     </div>
@@ -101,26 +126,26 @@
 
   <!-- Vincitore Overlay (Pop-up) -->
   @if (winner() !== null || isDraw()) {
-    <div class="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-lg animate-fade-in pointer-events-auto">
-      <div class="relative bg-black/60 border border-white/10 p-12 rounded-3xl text-center shadow-[0_0_100px_rgba(0,100,255,0.2)] transform scale-100 transition-transform overflow-hidden">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-[100px] opacity-20 -z-10"></div>
-        <div class="text-8xl mb-6 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+    <div class="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-lg animate-fade-in pointer-events-auto p-4">
+      <div class="relative bg-black/60 border border-white/10 p-8 md:p-12 rounded-3xl text-center shadow-[0_0_100px_rgba(0,100,255,0.2)] transform scale-100 transition-transform overflow-hidden w-full max-w-sm md:max-w-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-64 md:h-64 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-[80px] md:blur-[100px] opacity-20 -z-10"></div>
+        <div class="text-6xl md:text-8xl mb-4 md:mb-6 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
           @if (winner() === 1) { 🔴 }
           @else if (winner() === 2) { 🟡 }
           @else { ⚪ }
         </div>
-        <h2 class="text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-md">
+        <h2 class="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-md">
           @if (isDraw()) { PAREGGIO! }
           @else { VITTORIA! }
         </h2>
-        <p class="text-xl text-cyan-200/80 mb-10 tracking-widest font-light">
+        <p class="text-lg md:text-xl text-cyan-200/80 mb-8 md:mb-10 tracking-widest font-light">
           @if (winner() === 1) { IL ROSSO TRIONFA }
           @else if (winner() === 2) { IL GIALLO DOMINA }
           @else { NESSUN VINCITORE }
         </p>
-        <button (click)="resetGame()" class="group relative px-10 py-4 bg-transparent overflow-hidden rounded-full border border-cyan-500/50 text-cyan-400 font-bold text-lg hover:text-black transition-colors duration-300">
+        <button (click)="resetGame()" class="group relative w-full md:w-auto px-10 py-4 bg-transparent overflow-hidden rounded-full border border-cyan-500/50 text-cyan-400 font-bold text-lg hover:text-black transition-colors duration-300">
           <span class="absolute inset-0 w-full h-full bg-cyan-400/0 group-hover:bg-cyan-400 transition-all duration-300"></span>
-          <span class="relative z-10 flex items-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2">
             <i class="fas fa-play"></i> NUOVA PARTITA
           </span>
         </button>
